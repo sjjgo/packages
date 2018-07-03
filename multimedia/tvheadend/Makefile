@@ -67,6 +67,10 @@ ifeq ($(CONFIG_TVHEADEND_CWC_SUPPORT),)
   CONFIGURE_ARGS += --disable-cwc
 endif
 
+ifeq ($(CONFIG_TVHEADEND_CCCAM_SUPPORT),)
+  CONFIGURE_ARGS += --disable-cccam
+endif
+
 ifeq ($(CONFIG_TVHEADEND_LINUXDVB_SUPPORT),)
   CONFIGURE_ARGS += --disable-linuxdvb
 endif

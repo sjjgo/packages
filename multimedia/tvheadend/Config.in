@@ -2,6 +2,10 @@ config TVHEADEND_CWC_SUPPORT
 	bool "NewCamd support"
 	default y
 
+config TVHEADEND_CCCAM_SUPPORT
+        bool "CCcam support"
+        default y
+
 config TVHEADEND_LINUXDVB_SUPPORT
 	bool "Linux DVB support"
 	default y
