@@ -6,6 +6,14 @@ config TVHEADEND_CCCAM_SUPPORT
         bool "CCcam support"
         default y
 
+config TVHEADEND_CAPMT_SUPPORT
+        bool "caPMT support"
+        default y
+
+config TVHEADEND_CONSTCW_SUPPORT
+        bool "Constcw support"
+        default y
+
 config TVHEADEND_LINUXDVB_SUPPORT
 	bool "Linux DVB support"
 	default y

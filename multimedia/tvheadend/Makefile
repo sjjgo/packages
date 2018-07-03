@@ -71,6 +71,15 @@ ifeq ($(CONFIG_TVHEADEND_CCCAM_SUPPORT),)
   CONFIGURE_ARGS += --disable-cccam
 endif
 
+ifeq ($(CONFIG_TVHEADEND_CAPMT_SUPPORT),)
+  CONFIGURE_ARGS += --disable-capmt
+endif
+
+ifeq ($(CONFIG_TVHEADEND_CONSTCW_SUPPORT),)
+  CONFIGURE_ARGS += --disable-constcw
+endif
+
+
 ifeq ($(CONFIG_TVHEADEND_LINUXDVB_SUPPORT),)
   CONFIGURE_ARGS += --disable-linuxdvb
 endif
