@@ -216,4 +216,19 @@ config NGINX_HTTP_BROTLI
 		Add support for brotli compression module.
 	default n
 
+config NGINX_RTMP_MODULE
+	bool
+	prompt "Enable RTMP module"
+	depends on NGINX_SSL
+	help
+		Add support for NGINX-based Media Streaming Server module.
+	default n
+
+config NGINX_TS_MODULE
+	bool
+	prompt "Enable TS module"
+	help
+		Add support for MPEG-TS Live Module module.
+	default n
+
 endmenu
