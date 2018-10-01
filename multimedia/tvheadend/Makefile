@@ -15,7 +15,7 @@ PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:= https://github.com/tvheadend/tvheadend.git
+PKG_SOURCE_URL:= https://github.com/sjjgo/tvheadend.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_MIRROR_HASH:=78c2b9d56d6425e82be998c1452e575d63d82b0144fc46dd15954efce32e0086
 
