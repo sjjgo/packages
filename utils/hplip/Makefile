@@ -9,17 +9,19 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=hplip
-PKG_VERSION:=3.18.6
+PKG_VERSION:=3.18.10
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@SF/hplip
-PKG_HASH:=0ecf3e68b09480f602de81798ac00774cf8ffe754692e784bbbe0f9b2e337b7d
+PKG_HASH:=50d3c645f4ba5ae4a10c0f87cedcd0c0fd1598b412c9511476a9bb3b13101901
+
 PKG_MAINTAINER:=Luiz Angelo Daros de Luca <luizluca@gmail.com>
 PKG_LICENSE:=GPL-2.0 GPL-2.0+
 PKG_LICENSE_FILES:=COPYING LICENSE
 
-PKG_BUILD_DEPENDS := python libcups
+PKG_BUILD_PARALLEL:=1
+PKG_BUILD_DEPENDS:= python libcups
 PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
@@ -28,7 +30,7 @@ define Package/hplip/Default
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=HP Linux Imaging and Printing
-  URL:=http://sourceforge.net/projects/hplip/
+  URL:=https://sourceforge.net/projects/hplip/
 endef
 
 define Package/hplip/Default/description
@@ -66,6 +68,10 @@ CONFIGURE_ARGS += \
 	--disable-pp-build \
 	--disable-doc-build \
 	--disable-dbus-build \
+	--disable-hpijs-only-build \
+	--disable-hpcups-install \
+	--disable-hpps-install \
+	--disable-cups-drv-install \
 	--enable-lite-build
 
 define Package/hplip-common/install
