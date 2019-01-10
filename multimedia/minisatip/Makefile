@@ -11,7 +11,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/catalinii/minisatip.git
-PKG_SOURCE_VERSION:=fdbf44fc48392b0735e0bf17b31aaff8f06740d0
+PKG_SOURCE_VERSION:=bf6fc469ddd21ed7a74d6c2f77d501fff2231a40
 
 PKG_MAINTAINER:=Daniel Kucera <github@danman.eu>
 

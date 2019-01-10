@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tvheadend
-PKG_VERSION:=4.2.6
+PKG_VERSION:=0678cb1adf310873d73f5e8fcd9407c7c9db7d29
 PKG_RELEASE:=1
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
-PKG_SOURCE_URL:= https://codeload.github.com/tvheadend/tvheadend/tar.gz/v$(PKG_VERSION)?
+PKG_SOURCE_URL:= https://codeload.github.com/tvheadend/tvheadend/tar.gz/$(PKG_VERSION)?
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH:=09b4d4ff436a2006001ef3c3f38553dc4db3ea31bf9871b046a33180a0e8a8b9
+PKG_HASH:=c13a03e103290047d11169840d0a2edf2dacd2a6
 
 PKG_LICENSE:=GPL-3.0
 PKG_LICENSE_FILES:=LICENSE.md
