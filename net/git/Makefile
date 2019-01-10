@@ -8,15 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=git
-PKG_VERSION:=2.19.1
+PKG_VERSION:=2.20.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@KERNEL/software/scm/git/
-PKG_HASH:=345056aa9b8084280b1b9fe1374d232dec05a34e8849028a20bfdb56e920dbb5
+PKG_HASH:=9d2e91e2faa2ea61ba0a70201d023b36f54d846314591a002c610ea2ab81c3e9
 
 PKG_INSTALL:=1
-PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 
@@ -27,7 +26,7 @@ define Package/git/Default
   CATEGORY:=Network
   SUBMENU:=Version Control Systems
   DEPENDS:=+libopenssl +libpthread +librt +zlib
-  URL:=http://git-scm.com
+  URL:=https://git-scm.com
   MAINTAINER:=Peter Wagner <tripolar@gmx.at>
 endef
 

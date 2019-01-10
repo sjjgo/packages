@@ -1,12 +1,12 @@
 #
-# Copyright (c) 2018 Dirk Brenken (dev@brenken.org)
+# Copyright (c) 2018-2019 Dirk Brenken (dev@brenken.org)
 # This is free software, licensed under the GNU General Public License v3.
 #
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=banip
-PKG_VERSION:=0.0.5
+PKG_VERSION:=0.1.0
 PKG_RELEASE:=1
 PKG_LICENSE:=GPL-3.0+
 PKG_MAINTAINER:=Dirk Brenken <dev@brenken.org>
@@ -17,7 +17,7 @@ define Package/banip
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Ban incoming and/or outgoing ip adresses via ipsets
-	DEPENDS:=+jshn +jsonfilter +ipset +iptables
+	DEPENDS:=+jshn +jsonfilter +ip +ipset +iptables
 	PKGARCH:=all
 endef
 

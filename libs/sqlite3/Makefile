@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sqlite
-PKG_VERSION:=3240000
-PKG_RELEASE:=1
+PKG_VERSION:=3260000
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-autoconf-$(PKG_VERSION).tar.gz
-PKG_HASH:=d9d14e88c6fb6d68de9ca0d1f9797477d82fc3aed613558f87ffbdbbc5ceb74a
-PKG_SOURCE_URL:=http://www.sqlite.org/2018/
+PKG_HASH:=5daa6a3fb7d1e8c767cd59c4ded8da6e4b00c61d3b466d0685e35c4dd6d7bf5d
+PKG_SOURCE_URL:=https://www.sqlite.org/2018/
 
 PKG_LICENSE:=PUBLICDOMAIN
 PKG_LICENSE_FILES:=
@@ -34,7 +34,7 @@ define Package/sqlite3/Default
   SUBMENU:=database
   TITLE:=SQLite (v3.x) database engine
   URL:=http://www.sqlite.org/
-  MAINTAINER:=Etienne CHAMPETIER <champetier.etienne@gmail.com>
+  MAINTAINER:=Sebastian Kemper <sebastian_ml@gmx.net>
 endef
 
 define Package/sqlite3/Default/description
@@ -75,10 +75,10 @@ $(call Package/sqlite3/Default/description)
  formats.
 endef
 
-TARGET_CFLAGS += $(FPIC) \
-	-DSQLITE_ENABLE_UNLOCK_NOTIFY=1 \
+TARGET_CFLAGS += \
 	-DHAVE_ISNAN=1 \
-	-DHAVE_MALLOC_USABLE_SIZE=1
+	-DHAVE_MALLOC_USABLE_SIZE=1 \
+	-DSQLITE_ENABLE_UNLOCK_NOTIFY=1
 
 ifneq ($(CONFIG_SQLITE_FTS3),y)
 TARGET_CFLAGS += -USQLITE_ENABLE_FTS3
@@ -93,14 +93,6 @@ CONFIGURE_ARGS += \
 	--enable-static \
 	--disable-editline \
 	--disable-static-shell
-
-CONFIGURE_VARS += \
-	config_BUILD_CC="$(HOSTCC)" \
-	config_BUILD_CFLAGS="-O2" \
-	config_TARGET_CC="$(TARGET_CC)" \
-	config_TARGET_CFLAGS="$(TARGET_CFLAGS)" \
-	config_TARGET_READLINE_INC="$(TARGET_CPPFLAGS)" \
-	config_TARGET_READLINE_LIBS="$(TARGET_LDFLAGS) -lreadline -lncurses" \
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include
