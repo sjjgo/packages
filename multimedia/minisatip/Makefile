@@ -6,12 +6,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=minisatip
-PKG_VERSION:=0.7.15
+PKG_VERSION:=110e6e99bc6c823b2a2c30ea02c58c91f59d077e
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/catalinii/minisatip.git
-PKG_SOURCE_VERSION:=bf6fc469ddd21ed7a74d6c2f77d501fff2231a40
+PKG_SOURCE_VERSION:=110e6e99bc6c823b2a2c30ea02c58c91f59d077e
 
 PKG_MAINTAINER:=Daniel Kucera <github@danman.eu>
 
