@@ -1,16 +1,16 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=prometheus
-PKG_VERSION:=2.6.0
+PKG_VERSION:=2.7.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/prometheus/prometheus/tar.gz/v${PKG_VERSION}?
-PKG_HASH:=e0d3e77e45466fd055726268354a02834968a3275791be6cbd17513ec7860c1d
+PKG_HASH:=bfbeb434342a03b5849e2ec7a0cbe573067299cf59ccf59db0cacd8db8800bb0
 
 PKG_LICENSE:=Apache-2.0
 PKG_LICENSE_FILES:=LICENSE
-PKG_MAINTAINER:=Paul Spooren <spooren@informatik.uni-leipzig.de>
+PKG_MAINTAINER:=Paul Spooren <mail@aparcar.org>
 
 PKG_BUILD_DEPENDS:=golang/host
 PKG_BUILD_PARALLEL:=1

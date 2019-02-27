@@ -8,17 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=youtube-dl
-PKG_VERSION:=2019.01.02
+PKG_VERSION:=2019.02.18
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/rg3/youtube-dl/tar.gz/$(PKG_VERSION)?
-PKG_HASH:=db79ec9ffdadec820bd422e236c81f7e39d6e57f3adfcd372f8a9ea92fd918f0
+PKG_HASH:=7ec0064e923eeace598ed9c43719b4645f69e1baff7b0f727c74e145d9ecb5c7
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_LICENSE:=Unlicense
 PKG_LICENSE_FILES:=LICENSE
-PKG_MAINTAINER:=Adrian Panella <ianchi74@outlook.com>
+PKG_MAINTAINER:=Adrian Panella <ianchi74@outlook.com>, Josef Schlehofer <pepe.schlehofer@gmail.com>
 
 PKG_BUILD_DEPENDS:=python/host zip/host
 
