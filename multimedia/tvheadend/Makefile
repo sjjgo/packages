@@ -8,8 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tvheadend
+<<<<<<< HEAD
 PKG_VERSION:=0678cb1adf310873d73f5e8fcd9407c7c9db7d29
 PKG_RELEASE:=1
+=======
+PKG_VERSION:=4.0.10
+PKG_RELEASE:=4
+>>>>>>> 1c4b6fef5f57364d65fda1c1e072cc960e9d3dfb
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -110,8 +115,6 @@ CONFIGURE_ARGS += \
         --disable-libvorbis_static \
         --disable-libfdkaac \
         --disable-libfdkaac_static \
-
-TARGET_CFLAGS += -Wno-error=pointer-compare
 
 define Build/Prepare
 	$(call Build/Prepare/Default)

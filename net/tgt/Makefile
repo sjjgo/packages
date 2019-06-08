@@ -4,12 +4,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tgt
-PKG_VERSION:=1.0.76
+PKG_VERSION:=1.0.78
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/fujita/tgt/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=fda84ae0cfc71e2b67ca2d073978f60cb52feea5a697601938ff86656bfdd8f9
+PKG_HASH:=3ba44d5195b2007c6d9008f46a10f7754c90b9bcf6117a7f3e136accb209faac
 
 PKG_MAINTAINER:=Maxim Storchak <m.storchak@gmail.com>
 PKG_LICENSE:=GPL-2.0

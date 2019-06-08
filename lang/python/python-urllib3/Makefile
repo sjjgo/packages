@@ -8,17 +8,21 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-urllib3
-PKG_VERSION:=1.24.1
-PKG_RELEASE:=2
+PKG_VERSION:=1.25.3
+PKG_RELEASE:=1
+
+PKG_MAINTAINER:=Josef Schlehofer <pepe.schlehofer@gmail.com>
 PKG_LICENSE:=MIT
+PKG_LICENSE_FILES:=LICENSE.txt
+PKG_CPE_ID:=cpe:/a:urllib3_project:urllib3
 
 PKG_SOURCE:=urllib3-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/u/urllib3
-PKG_HASH:=de9529817c93f27c8ccbfead6985011db27bd0ddfcdb2d86f3f663385c6a9c22
+PKG_HASH:=dbe59173209418ae49d485b87d1681aefa36252ee85884c31346debd19463232
+
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-urllib3-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
-
 include ../python-package.mk
 include ../python3-package.mk
 
@@ -28,7 +32,7 @@ define Package/python-urllib3/Default
   SUBMENU:=Python
   SECTION:=lang
   CATEGORY:=Languages
-  TITLE:=HTTP library with thread-safe connection pooling, file post, and more.
+  TITLE:=Sanity-friendly HTTP client
   URL:=https://urllib3.readthedocs.io/
 endef
 
@@ -57,6 +61,7 @@ endef
 $(eval $(call PyPackage,python-urllib3))
 $(eval $(call BuildPackage,python-urllib3))
 $(eval $(call BuildPackage,python-urllib3-src))
+
 $(eval $(call Py3Package,python3-urllib3))
 $(eval $(call BuildPackage,python3-urllib3))
 $(eval $(call BuildPackage,python3-urllib3-src))
