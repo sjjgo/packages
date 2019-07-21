@@ -13,15 +13,18 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=boost
 PKG_VERSION:=1.70.0
 PKG_SOURCE_VERSION:=1_70_0
-PKG_RELEASE:=5
+PKG_RELEASE:=7
 
 PKG_SOURCE:=$(PKG_NAME)_$(PKG_SOURCE_VERSION).tar.bz2
 PKG_SOURCE_URL:=@SF/$(PKG_NAME)/$(PKG_NAME)/$(PKG_VERSION) https://dl.bintray.com/boostorg/release/$(PKG_VERSION)/source/
+PKG_HASH:=430ae8354789de4fd19ee52f3b1f739e1fba576f0aded0897c3c2bc00fb38778
+
+PKG_MAINTAINER:=Carlos M. Ferreira <carlosmf.pt@gmail.com>
+PKG_LICENSE:=BSL-1.0
+PKG_LICENSE_FILES:=LICENSE_1_0.txt
+
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)_$(PKG_SOURCE_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(PKG_NAME)_$(PKG_SOURCE_VERSION)
-PKG_HASH:=430ae8354789de4fd19ee52f3b1f739e1fba576f0aded0897c3c2bc00fb38778
-PKG_LICENSE:=Boost Software License <http://www.boost.org/users/license.html>
-PKG_MAINTAINER:=Carlos M. Ferreira <carlosmf.pt@gmail.com>
 
 PKG_BUILD_PARALLEL:=1
 PKG_USE_MIPS16:=0
@@ -33,7 +36,7 @@ define Package/boost/Default
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE:=Boost C++ source library
-  URL:=http://www.boost.org
+  URL:=https://www.boost.org
   DEPENDS:=+libstdcpp +libpthread +librt
 endef
 
@@ -196,11 +199,11 @@ define Package/boost/config
 				bool "Shared"
 
 			config boost-runtime-static
-				depends on @(!boost-shared-libs&&!boost-static-and-shared-libs)
+				depends on !boost-shared-libs&&!boost-static-and-shared-libs
 				bool "Static"
 
 			config boost-runtime-static-and-shared
-				depends on @(boost-use-name-tags&&!boost-shared-libs&&!boost-static-and-shared-libs)
+				depends on boost-use-name-tags&&!boost-shared-libs&&!boost-static-and-shared-libs
 				bool "Both"
 		endchoice
 
@@ -237,14 +240,14 @@ define Package/boost/config
 			default n
 
 		config boost-single-thread
-			depends on @boost-use-name-tags
+			depends on boost-use-name-tags
 			bool "Single thread Support."
 			help
 				Compile Boost libraries in single-thread mode.
 			default n
 
 		config boost-build-type-complete
-			depends on @boost-use-name-tags
+			depends on boost-use-name-tags
 			bool "Complete Boost Build."
 			help
 				Builds both release and debug libs. It will take much longer to compile.
@@ -274,7 +277,7 @@ define Package/boost/config
 			select PACKAGE_boost-test
 
 		config boost-coroutine2
-			depends on !@GCC_VERSION_4_8
+			depends on !GCC_VERSION_4_8
 			bool "Boost couroutine2 support."
 			select PACKAGE_boost-coroutine
 			default n
@@ -291,16 +294,6 @@ define Package/boost/config
 			$(if $(findstring locale,$(lib)),depends on BUILD_NLS,)\
 			$(if $(findstring python,$(lib)),depends on PACKAGE_$(lib),)\
 			$(if $(findstring fiber,$(lib)),depends on (CPU_TYPE!=mips32 && CPU_TYPE!=mips64),)
-		)
-	endmenu
-
-	menu "Select Boost libraries for Host build"
-		comment  "Libraries for Host build"
-
-		$(foreach lib,$(BOOST_LIBS), \
-		config boost-host-build-$(lib)
-			bool "Boost $(lib) $(if $(findstring python,$(lib)),$(paren_left)v$(if $(findstring 3,$(lib)),$(BOOST_PYTHON3_VER),$(BOOST_PYTHON_VER))$(paren_right) ,)library."
-			default n
 		)
 	endmenu
 
@@ -326,7 +319,6 @@ define DefineBoostLibrary
 
   BOOST_DEPENDS+= +$(if $(4),$(4):boost-$(1),boost-$(1))
   PKG_CONFIG_DEPENDS+= CONFIG_PACKAGE_boost-$(1)
-  HOST_CONFIG_DEPENDS+= CONFIG_boost-host-build-$(1)
 
   BOOST_LIBS+= $(1)
 
@@ -379,11 +371,8 @@ define Host/Compile
 	( cd $(HOST_BUILD_DIR)/tools/build/src/engine ; ./build.sh gcc )
 
 	( cd $(HOST_BUILD_DIR) ; \
-		./bootstrap.sh --prefix=$(STAGING_DIR_HOST) \
-			--with-libraries=$(subst $() $(),$(comma),$(strip \
-				headers \
-				$(foreach lib,$(BOOST_LIBS), \
-					$(if $(findstring python,$(lib)),,$(if $(CONFIG_boost-host-build-$(lib)),$(lib)))))) ; \
+		./bootstrap.sh --prefix=$(STAGING_DIR_HOSTPKG) \
+			--with-libraries=atomic,chrono,date_time,filesystem,headers,thread,system ;\
 		./b2 --ignore-site-config install )
 endef
 

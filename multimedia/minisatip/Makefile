@@ -6,14 +6,26 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=minisatip
+<<<<<<< HEAD
 PKG_VERSION:=110e6e99bc6c823b2a2c30ea02c58c91f59d077e
+=======
+>>>>>>> 5a3e520f45b96f3458266ba20cf4d3b09bb4b974
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/catalinii/minisatip.git
+<<<<<<< HEAD
 PKG_SOURCE_VERSION:=110e6e99bc6c823b2a2c30ea02c58c91f59d077e
 
 PKG_MAINTAINER:=Daniel Kucera <github@danman.eu>
+=======
+PKG_SOURCE_VERSION:=b9fcb51b207f3b26b32b9b7c0e633cffea82274d
+PKG_SOURCE_DATE:=2019-07-08
+PKG_MIRROR_HASH:=1857595acb8216c078b1c4a355f7559cfce4dff22464a5b31c7712be6b374534
+
+PKG_MAINTAINER:=Daniel Kucera <github@danman.eu>
+PKG_LICENSE:=GPL-2.0-or-later
+>>>>>>> 5a3e520f45b96f3458266ba20cf4d3b09bb4b974
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -22,8 +34,36 @@ define Package/minisatip
   URL:=https://github.com/catalinii/minisatip
   SECTION:=multimedia
   CATEGORY:=Multimedia
+<<<<<<< HEAD
 endef
 
+=======
+  DEPENDS:=+MINISATIP_AES:libopenssl
+endef
+
+define Package/minisatip/config
+	if PACKAGE_minisatip
+
+		config MINISATIP_AES
+			bool "OpenSSL (AES as part of DVBAPI)"
+			default n
+
+		config MINISATIP_CLIENT
+			bool "SatIP Client"
+			default y
+
+	endif
+endef
+
+ifeq ($(CONFIG_MINISATIP_AES),)
+	CONFIGURE_ARGS += --disable-dvbaes
+endif
+
+ifeq ($(CONFIG_MINISATIP_CLIENT),)
+	CONFIGURE_ARGS += --disable-satipc
+endif
+
+>>>>>>> 5a3e520f45b96f3458266ba20cf4d3b09bb4b974
 define Package/minisatip/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/minisatip $(1)/usr/bin/
