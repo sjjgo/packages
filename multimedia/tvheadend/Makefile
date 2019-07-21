@@ -8,13 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tvheadend
-<<<<<<< HEAD
-PKG_VERSION:=0678cb1adf310873d73f5e8fcd9407c7c9db7d29
-PKG_RELEASE:=1
-=======
-PKG_VERSION:=4.0.10
-PKG_RELEASE:=4
->>>>>>> 1c4b6fef5f57364d65fda1c1e072cc960e9d3dfb
+PKG_VERSION:=6be300c430ab614aa527ef34e34f007f34a68ee0
+PKG_RELEASE:=4.3-master
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -47,7 +42,7 @@ define Package/tvheadend/description
 
   Tvheadend offers the HTTP (VLC, MPlayer), HTSP (Kodi, Movian) and SAT>IP streaming.
  
-  As of Tvheadend 2.4, the Tvheadend 'bundle' (the web front-end) requires CONFIG_BUILD_NLS (i.e., native language support) to be enabled.
+  As of Tvheadend 4.2, the Tvheadend 'bundle' (the web front-end) requires CONFIG_BUILD_NLS (i.e., native language support) to be enabled.
   This allows the correct version of libiconv to be built and linked.
   Tvheadend will function without the bundle being enabled, and therefore without CONFIG_BUILD_NLS, you will just see a blank page if you attempt to log into the front-end.
 endef
