@@ -59,6 +59,8 @@ load_uci_config() {
 	[ -n "$htsp_port2" ] && procd_append_param command --htsp_port "$htsp_port2"
 	config_get xspf server xspf 0
 	[ "$xspf" -eq 1 ] && procd_append_param command --xspf
+	config_get satip_xml server satip_xml
+        [ -n "$satip_xml" ] && procd_append_param command --satip_xml "$satip_xml"
 }
 
 start_service() {
