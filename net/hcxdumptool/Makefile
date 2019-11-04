@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=hcxdumptool
-PKG_VERSION:=5.1.7
+PKG_VERSION:=5.2.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/zerbea/hcxdumptool/tar.gz/$(PKG_VERSION)?
-PKG_HASH:=6ac996a506cb312a5f1c5987f30a4a80c793993908750f69f2df51056f961269
+PKG_HASH:=b091171fe5e6f926ace3997219dfc5a84ce6d1f2080d3320d456f88282019057
 
 PKG_MAINTAINER:=Andreas Nilsen <adde88@gmail.com>
 PKG_LICENSE:=MIT
@@ -45,8 +45,8 @@ define Build/Compile
 endef
 
 define Package/hcxdumptool/install
-	$(INSTALL_DIR) $(1)/sbin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/hcxdumptool $(1)/sbin/
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/hcxdumptool $(1)/usr/sbin/
 endef
 
 $(eval $(call BuildPackage,hcxdumptool))

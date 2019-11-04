@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=apcupsd
 PKG_VERSION:=3.14.14
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_MAINTAINER:=Othmar Truniger <github@truniger.ch>
 PKG_LICENSE:=GPL-2.0
@@ -18,6 +18,7 @@ PKG_LICENSE_FILES:=COPYING
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@SF/apcupsd
 PKG_HASH:=db7748559b6b4c3784f9856561ef6ac6199ef7bd019b3edcd7e0a647bf8f9867
+PKG_CPE_ID:=cpe:/a:apc:apcupsd
 
 PKG_BUILD_DEPENDS:=libgd
 
@@ -39,7 +40,7 @@ define Package/apcupsd-cgi
   URL:=http://www.apcupsd.org/
 endef
 
-CONFIGURE_VARS += SHUTDOWN=/sbin/halt
+CONFIGURE_VARS += SHUTDOWN=/sbin/halt SCRIPTSHELL=/bin/sh WALL=/bin/true APCUPSD_MAIL=/bin/true
 
 define Build/Configure
 	$(CP) $(SCRIPT_DIR)/config.* $(PKG_BUILD_DIR)/autoconf/

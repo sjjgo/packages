@@ -9,13 +9,14 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nbd
 PKG_VERSION:=3.19
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@SF/nbd
 PKG_HASH:=b4466412f13e057659f25d35e1e8e181afd62c7179bff22a6add81445ecb8690
-PKG_LICENSE:=GPL-2.0+
+PKG_LICENSE:=GPL-2.0-or-later
 PKG_MAINTAINER:=Marcin Jurkowski <marcin1j@gmail.com>
+PKG_CPE_ID:=cpe:/a:network_block_device:nbd
 
 PKG_INSTALL:=1
 
@@ -23,8 +24,6 @@ include $(INCLUDE_DIR)/package.mk
 
 # -liconv due to glib2, to be revisited later
 include $(INCLUDE_DIR)/nls.mk
-
-PKG_BUILD_DEPENDS:=glib2 gettext
 
 define Package/nbd
   SECTION:=net

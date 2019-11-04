@@ -8,24 +8,20 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-voluptuous
-PKG_VERSION:=0.11.5
+PKG_VERSION:=0.11.7
 PKG_RELEASE:=1
 
-PKG_SOURCE:=voluptuous-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/v/voluptuous/
-PKG_HASH:=567a56286ef82a9d7ae0628c5842f65f516abcb496e74f3f59f1d7b28df314ef
-
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-voluptuous-$(PKG_VERSION)
+PYPI_NAME:=voluptuous
+PKG_HASH:=2abc341dbc740c5e2302c7f9b8e2e243194fb4772585b991931cb5b22e9bf456
 
 PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=COPYING
 PKG_MAINTAINER:=Josef Schlehofer <josef.schlehofer@nic.cz>
 
+include ../pypi.mk
 include $(INCLUDE_DIR)/package.mk
 include ../python-package.mk
 include ../python3-package.mk
-
-PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/python-voluptuous/Default
   SECTION:=lang
@@ -66,4 +62,3 @@ $(eval $(call BuildPackage,python-voluptuous-src))
 $(eval $(call Py3Package,python3-voluptuous))
 $(eval $(call BuildPackage,python3-voluptuous))
 $(eval $(call BuildPackage,python3-voluptuous-src))
-

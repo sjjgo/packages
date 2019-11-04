@@ -9,19 +9,20 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bind
-PKG_VERSION:=9.14.3
+PKG_VERSION:=9.14.6
 PKG_RELEASE:=1
 USERID:=bind=57:bind=57
 
 PKG_MAINTAINER:=Noah Meyerhans <frodo@morgul.net>
-PKG_LICENSE := MPL-2.0
+PKG_LICENSE:=MPL-2.0
+PKG_LICENSE_FILES:=LICENSE
 PKG_CPE_ID:=cpe:/a:isc:bind
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:= \
 	https://www.mirrorservice.org/sites/ftp.isc.org/isc/bind9/$(PKG_VERSION) \
 	https://ftp.isc.org/isc/bind9/$(PKG_VERSION)
-PKG_HASH:=ce878aabcf01b61ed114522c32fff9e268b02da55b3c248349860bc3d0c8bdfa
+PKG_HASH:=8967a040ed900e1800293b9874357fc2f267f33c723aa617268e163bd921edfe
 
 PKG_FIXUP:=autoreconf
 PKG_REMOVE_FILES:=aclocal.m4 libtool.m4
