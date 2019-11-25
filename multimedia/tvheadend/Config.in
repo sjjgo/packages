@@ -2,6 +2,14 @@ config TVHEADEND_CWC_SUPPORT
 	bool "NewCamd support"
 	default y
 
+config TVHEADEND_CCCAM_SUPPORT
+        bool "CCCam support"
+        default n
+
+config TVHEADEND_CA_SUPPORT
+        bool "CA support"
+        default n
+
 config TVHEADEND_LINUXDVB_SUPPORT
 	bool "Linux DVB support"
 	default y
@@ -30,5 +38,13 @@ config TVHEADEND_DISABLE_SATIP_CLIENT_SUPPORT
 
 config TVHEADEND_ENABLE_BUNDLE
         bool "Enable the Tvheadend bundle (this is required for the web interface)"
-	depends on @BUILD_NLS 
         default n
+
+config TVHEADEND_PCRE_SUPPORT
+        bool "Enable PCRE Support"
+        default n
+
+config TVHEADEND_PCRE2_SUPPORT
+        bool "Enable PCRE2 Support"
+        default y
+

@@ -8,15 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tvheadend
-PKG_VERSION:=6be300c430ab614aa527ef34e34f007f34a68ee0
+PKG_VERSION:=ebb0968047b6a3aecd61b48792ab8b48a50ecb0d
 PKG_RELEASE:=4.3-master
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE_URL:= https://codeload.github.com/tvheadend/tvheadend/tar.gz/$(PKG_VERSION)?
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH:=88ca39e515ec9f688c9985de9b0a1408708da22be7bfed2cad3a50eb759a2ba8
-
+PKG_HASH:=ff3f9fb539754398a821dff7e39d4f0d430a581456a86bbf3554af7c4c081d29
 PKG_LICENSE:=GPL-3.0
 PKG_LICENSE_FILES:=LICENSE.md
 
@@ -31,7 +30,7 @@ define Package/tvheadend
   SECTION:=multimedia
   CATEGORY:=Multimedia
   TITLE:=Tvheadend is a TV streaming server for Linux
-  DEPENDS:=+libopenssl +librt +zlib +TVHEADEND_AVAHI_SUPPORT:libavahi-client $(ICONV_DEPENDS)
+  DEPENDS:=+libopenssl +librt +zlib +TVHEADEND_PCRE2_SUPPORT:libpcre2 +TVHEADEND_PCRE_SUPPORT:libpcre +TVHEADEND_AVAHI_SUPPORT:libavahi-client $(ICONV_DEPENDS)
   URL:=https://tvheadend.org
   MAINTAINER:=Jan Čermák <jan.cermak@nic.cz>, Sandy Gould <sjjgould@gmail.com>
 endef
@@ -65,6 +64,14 @@ ifeq ($(CONFIG_TVHEADEND_CWC_SUPPORT),)
   CONFIGURE_ARGS += --disable-cwc
 endif
 
+ifeq ($(CONFIG_TVHEADEND_CA_SUPPORT),)
+  CONFIGURE_ARGS += --disable-ca
+endif
+
+ifeq ($(CONFIG_TVHEADEND_CCCAM_SUPPORT),)
+  CONFIGURE_ARGS += --disable-cccam 
+endif
+
 ifeq ($(CONFIG_TVHEADEND_LINUXDVB_SUPPORT),)
   CONFIGURE_ARGS += --disable-linuxdvb
 endif
@@ -77,6 +84,20 @@ ifeq ($(CONFIG_TVHEADEND_AVAHI_SUPPORT),)
   CONFIGURE_ARGS += --disable-avahi
 else
   CONFIGURE_ARGS += --enable-avahi
+endif
+
+ifeq ($(CONFIG_TVHEADEND_PCRE2_SUPPORT),y)
+  CONFIGURE_ARGS += --enable-pcre2 
+  CONFIGURE_ARGS += --disable-pcre
+else
+  CONFIGURE_ARGS += --disable-pcre2
+endif
+
+ifeq ($(CONFIG_TVHEADEND_PCRE_SUPPORT),y)
+  CONFIGURE_ARGS += --enable-pcre 
+  CONFIGURE_ARGS += --disable-pcre2
+else
+  CONFIGURE_ARGS += --disable-pcre
 endif
 
 ifeq ($(CONFIG_TVHEADEND_HDHOMERUN_CLIENT_SUPPORT),y)
@@ -110,6 +131,7 @@ CONFIGURE_ARGS += \
         --disable-libvorbis_static \
         --disable-libfdkaac \
         --disable-libfdkaac_static \
+	--disable-tvhcsa \
 
 define Build/Prepare
 	$(call Build/Prepare/Default)

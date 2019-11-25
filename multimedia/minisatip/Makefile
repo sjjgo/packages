@@ -6,13 +6,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=minisatip
-PKG_RELEASE:=1.0.0
+PKG_RELEASE:=2019.09.20
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/catalinii/minisatip.git
-PKG_SOURCE_VERSION:=a8bd4abf0fa0188cd47fd0f27eda06328aea3914
-PKG_SOURCE_DATE:=2019-07-21
-PKG_MIRROR_HASH:=1857595acb8216c078b1c4a355f7559cfce4dff22464a5b31c7712be6b374534
+PKG_SOURCE_VERSION:=679b7cafc3d1dc9f710da91ed71a39b96cee7a8d
+PKG_SOURCE_DATE:=2019-09-20
 
 PKG_MAINTAINER:=Daniel Kucera <github@danman.eu>
 PKG_LICENSE:=GPL-2.0-or-later
@@ -76,12 +75,14 @@ ifeq ($(CONFIG_MINISATIP_CLIENT),)
 endif
 
 define Package/minisatip/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/minisatip $(1)/usr/bin/
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/minisatip $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/usr/share/minisatip/html/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/html/* $(1)/usr/share/minisatip/html
 	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_BIN) ./files/minisatip.init $(1)/etc/init.d/minisatip
+	$(INSTALL_CONF) ./files/minisatip.config $(1)/etc/config/minisatip
 endef
 
 $(eval $(call BuildPackage,minisatip))

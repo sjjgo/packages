@@ -1,0 +1,20 @@
+--- a/Makefile
++++ b/Makefile
+@@ -36,7 +36,7 @@ CFLAGS  += -g
+ ifeq ($(CONFIG_CCDEBUG),yes)
+ CFLAGS  += -O0
+ else
+-CFLAGS  += -O2 -D_FORTIFY_SOURCE=2
++CFLAGS  += -O2
+ endif
+ ifeq ($(CONFIG_PIE),yes)
+ CFLAGS  += -fPIE
+@@ -53,7 +53,7 @@ CFLAGS  += -Wall -Wwrite-strings -Wno-de
+ CFLAGS  += -Wmissing-prototypes
+ CFLAGS  += -fms-extensions -funsigned-char -fno-strict-aliasing
+ ifeq ($(COMPILER), gcc)
+-CFLAGS  += -Wno-stringop-truncation -Wno-stringop-overflow
++CFLAGS  += -Wno-stringop-overflow
+ endif
+ CFLAGS  += -D_FILE_OFFSET_BITS=64
+ CFLAGS  += -I${BUILDDIR} -I${ROOTDIR}/src -I${ROOTDIR}
