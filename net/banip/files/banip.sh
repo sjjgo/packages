@@ -13,7 +13,7 @@
 #
 LC_ALL=C
 PATH="/usr/sbin:/usr/bin:/sbin:/bin"
-ban_ver="0.3.5"
+ban_ver="0.3.10"
 ban_basever=""
 ban_enabled=0
 ban_automatic="1"
@@ -96,6 +96,16 @@ f_envload()
 	#
 	config_load banip
 	config_foreach parse_config source
+
+	# log daemon check
+	#
+	if [ "$(/etc/init.d/log running; printf "%u" "${?}")" -eq 1 ]
+	then
+		unset ban_logger
+		f_log "info" "your log daemon 'logd' is not running, please enable 'logd' to use this service"
+		f_rmtemp
+		exit 1
+	fi
 
 	# version check
 	#
@@ -221,21 +231,24 @@ f_envcheck()
 			cnt=$((cnt+1))
 			sleep 1
 		done
-		utils="aria2c curl wget uclient-fetch"
-		for util in ${utils}
-		do
-			if { [ "${util}" = "uclient-fetch" ] && [ -n "$(printf "%s\\n" "${packages}" | grep "^libustream-")" ]; } || \
-				{ [ "${util}" = "wget" ] && [ -n "$(printf "%s\\n" "${packages}" | grep "^wget -")" ]; } || \
-				{ [ "${util}" != "uclient-fetch" ] && [ "${util}" != "wget" ]; }
-			then
-				ban_fetchutil="$(command -v "${util}")"
-				if [ -x "${ban_fetchutil}" ]
+		if [ -n "${packages}" ]
+		then
+			utils="aria2c curl wget uclient-fetch"
+			for util in ${utils}
+			do
+				if { [ "${util}" = "uclient-fetch" ] && [ -n "$(printf "%s\\n" "${packages}" | grep "^libustream-")" ]; } || \
+					{ [ "${util}" = "wget" ] && [ -n "$(printf "%s\\n" "${packages}" | grep "^wget -")" ]; } || \
+					{ [ "${util}" != "uclient-fetch" ] && [ "${util}" != "wget" ]; }
 				then
-					break
+					ban_fetchutil="$(command -v "${util}")"
+					if [ -x "${ban_fetchutil}" ]
+					then
+						break
+					fi
 				fi
-			fi
-			unset ban_fetchutil util
-		done
+				unset ban_fetchutil util
+			done
+		fi
 	else
 		util="${ban_fetchutil}"
 		ban_fetchutil="$(command -v "${util}")"
@@ -296,7 +309,7 @@ f_temp()
 		f_log "err" "the temp directory '/tmp' does not exist or has not been mounted yet, please create the directory or raise the 'ban_triggerdelay' to defer the banIP start"
 	fi
 
-	if [ ! -s "${ban_pidfile}" ]
+	if [ ! -f "${ban_pidfile}" ] || [ ! -s "${ban_pidfile}" ]
 	then
 		printf "%s" "${$}" > "${ban_pidfile}"
 	fi
@@ -338,7 +351,7 @@ f_iptrule()
 			if { [ "${rc}" -ne 0 ] && { [ "${action}" = "-A" ] || [ "${action}" = "-I" ]; } } || \
 				{ [ "${rc}" -eq 0 ] && [ "${action}" = "-D" ]; }
 			then
-				"${ban_ipt6}" "${timeout}" "${action}" ${rule}
+				"${ban_ipt6}" "${timeout}" "${action}" ${rule} 2>/dev/null
 			fi
 		fi
 	else
@@ -349,9 +362,14 @@ f_iptrule()
 			if { [ "${rc}" -ne 0 ] && { [ "${action}" = "-A" ] || [ "${action}" = "-I" ]; } } || \
 				{ [ "${rc}" -eq 0 ] && [ "${action}" = "-D" ]; }
 			then
-				"${ban_ipt}" "${timeout}" "${action}" ${rule}
+				"${ban_ipt}" "${timeout}" "${action}" ${rule} 2>/dev/null
 			fi
 		fi
+	fi
+	if [ "${?}" -ne 0 ]
+	then
+		> "${tmp_err}"
+		f_log "info" "can't create iptables rule: action: '${action:-"-"}', rule: '${rule:-"-"}'"
 	fi
 }
 
@@ -452,7 +470,8 @@ f_ipset()
 		"initial")
 			if [ -x "${ban_ipt}" ] && [ -z "$("${ban_ipt}" "${timeout}" -nL "${ban_chain}" 2>/dev/null)" ]
 			then
-				"${ban_ipt}" "${timeout}" -N "${ban_chain}"
+				"${ban_ipt}" "${timeout}" -N "${ban_chain}" 2>/dev/null
+				out_rc="${?}"
 			elif [ -x "${ban_ipt}" ]
 			then
 				src_name="ruleset"
@@ -464,7 +483,8 @@ f_ipset()
 			fi
 			if [ -x "${ban_ipt6}" ] && [ -z "$("${ban_ipt6}" "${timeout}" -nL "${ban_chain}" 2>/dev/null)" ]
 			then
-				"${ban_ipt6}" "${timeout}" -N "${ban_chain}"
+				"${ban_ipt6}" "${timeout}" -N "${ban_chain}" 2>/dev/null
+				out_rc="${?}"
 			elif [ -x "${ban_ipt6}" ]
 			then
 				src_name="ruleset_6"
@@ -474,7 +494,9 @@ f_ipset()
 					f_iptrule "-D" "${rule} -j ${ban_chain}"
 				done
 			fi
-			f_log "debug" "f_ipset ::: name: -, mode: ${mode:-"-"}, chain: ${ban_chain:-"-"}, ruleset: ${ruleset:-"-"}, ruleset_6: ${ruleset_6:-"-"}"
+			out_rc="${out_rc:-"${in_rc}"}"
+			f_log "debug" "f_ipset ::: name: -, mode: ${mode:-"-"}, chain: ${ban_chain:-"-"}, ruleset: ${ruleset:-"-"}, ruleset_6: ${ruleset_6:-"-"}, out_rc: ${out_rc}"
+			return "${out_rc}"
 		;;
 		"create")
 			if [ -x "${ban_ipset}" ]
@@ -505,6 +527,7 @@ f_ipset()
 			end_ts="$(date +%s)"
 			out_rc="${out_rc:-"${in_rc}"}"
 			f_log "debug" "f_ipset ::: name: ${src_name:-"-"}, mode: ${mode:-"-"}, settype: ${src_settype:-"-"}, setipv: ${src_setipv:-"-"}, ruletype: ${src_ruletype:-"-"}, count(sum/ip/cidr): ${cnt}/${cnt_ip}/${cnt_cidr}, time: $((end_ts-start_ts)), out_rc: ${out_rc}"
+			return "${out_rc}"
 		;;
 		"refresh")
 			if [ -x "${ban_ipset}" ] && [ -n "$("${ban_ipset}" -q -n list "${src_name}")" ]
@@ -540,15 +563,15 @@ f_ipset()
 				[ -n "$("${ban_ipt}" "${timeout}" -nL "${ban_chain}" 2>/dev/null)" ]
 			then
 				"${ban_ipt_save}" | grep -v -- "-j ${ban_chain}" | "${ban_ipt_restore}"
-				"${ban_ipt}" "${timeout}" -F "${ban_chain}"
-				"${ban_ipt}" "${timeout}" -X "${ban_chain}"
+				"${ban_ipt}" "${timeout}" -F "${ban_chain}" 2>/dev/null
+				"${ban_ipt}" "${timeout}" -X "${ban_chain}" 2>/dev/null
 			fi
 			if [ -x "${ban_ipt6}" ] && [ -x "${ban_ipt6_save}" ] && [ -x "${ban_ipt6_restore}" ] && \
 				[ -n "$("${ban_ipt6}" "${timeout}" -nL "${ban_chain}" 2>/dev/null)" ]
 			then
 				"${ban_ipt6_save}" | grep -v -- "-j ${ban_chain}" | "${ban_ipt6_restore}"
-				"${ban_ipt6}" "${timeout}" -F "${ban_chain}"
-				"${ban_ipt6}" "${timeout}" -X "${ban_chain}"
+				"${ban_ipt6}" "${timeout}" -F "${ban_chain}" 2>/dev/null
+				"${ban_ipt6}" "${timeout}" -X "${ban_chain}" 2>/dev/null
 			fi
 			for source in ${ban_sources}
 			do
@@ -582,13 +605,6 @@ f_log()
 			f_ipset destroy
 			f_rmbackup
 			f_rmtemp
-			log_msg="Please also check 'https://github.com/openwrt/packages/blob/master/net/banip/files/README.md'"
-			if [ -x "${ban_logger}" ]
-			then
-				"${ban_logger}" -p "${class}" -t "banIP-${ban_ver}[${$}]" "${log_msg}"
-			else
-				printf "%s %s %s\\n" "${class}" "banIP-${ban_ver}[${$}]" "${log_msg}"
-			fi
 			exit 1
 		fi
 	fi
@@ -626,9 +642,16 @@ f_main()
 	mem_free="$(awk '/^MemFree/ {print int($2/1000)}' "/proc/meminfo" 2>/dev/null)"
 	f_log "debug" "f_main  ::: fetch_util: ${ban_fetchutil:-"-"}, fetch_parm: ${ban_fetchparm:-"-"}, ssh_daemon: ${ban_sshdaemon}, interface(s): ${ban_iface:-"-"}, device(s): ${ban_dev:-"-"}, all_devices: ${ban_dev_all:-"-"}, backup_dir: ${ban_backupdir:-"-"}, mem_total: ${mem_total:-0}, mem_free: ${mem_free:-0}, max_queue: ${ban_maxqueue}"
 
-	# main loop
+	# chain creation
 	#
 	f_ipset initial
+	if [ "${?}" -ne 0 ]
+	then
+		f_log "err" "banIP processing failed, fatal error during iptables chain creation (${ban_sysver})"
+	fi
+
+	# main loop
+	#
 	for src_name in ${ban_sources}
 	do
 		unset src_on
@@ -671,6 +694,8 @@ f_main()
 		tmp_file="${ban_tmpfile}.${src_name}.file"
 		tmp_raw="${tmp_file}.raw"
 		tmp_cnt="${tmp_file}.cnt"
+		tmp_err="${tmp_file}.err"
+
 		# basic pre-checks
 		#
 		f_log "debug" "f_main  ::: name: ${src_name}, src_on: ${src_on:-"-"}"
@@ -859,18 +884,23 @@ f_main()
 	done
 	wait
 
-	for cnt in $(cat "${ban_tmpfile}".*.cnt 2>/dev/null)
-	do
-		ban_cnt="$((ban_cnt+cnt))"
-	done
-	if [ "${ban_cnt}" -gt 0 ]
+	if [ -z "$(ls "${ban_tmpfile}".*.err 2>/dev/null)" ]
 	then
-		ban_setcnt="$(ls "${ban_tmpfile}".*.cnt 2>/dev/null | wc -l)"
+		for cnt in $(cat "${ban_tmpfile}".*.cnt 2>/dev/null)
+		do
+			ban_cnt="$((ban_cnt+cnt))"
+		done
+		if [ "${ban_cnt}" -gt 0 ]
+		then
+			ban_setcnt="$(ls "${ban_tmpfile}".*.cnt 2>/dev/null | wc -l)"
+		fi
+		f_log "info" "${ban_setcnt} IPSets with overall ${ban_cnt} IPs/Prefixes loaded successfully (${ban_sysver})"
+		f_bgserv "start"
+		f_jsnup
+		f_rmtemp
+	else
+		f_log "err" "banIP processing failed, fatal iptables error(s) during subshell processing (${ban_sysver})"
 	fi
-	f_log "info" "${ban_setcnt} IPSets with overall ${ban_cnt} IPs/Prefixes loaded successfully (${ban_sysver})"
-	f_bgserv "start"
-	f_jsnup
-	f_rmtemp
 }
 
 # update runtime information
